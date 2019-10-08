@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const { isAbsolute, join, parse } = require('path');
+const pify = require('util').promisify;
+const trace2video = require('../src/index');
+
+const readFile = pify(fs.readFile);
+
+const tracePath = process.argv.slice(2)[0];
+if (!tracePath) {
+    throw new Error(
+        'Must pass the path to the JSON trace file as the only argument',
+    );
+}
+
+const absPath = isAbsolute(tracePath)
+    ? tracePath
+    : join(process.cwd(), tracePath);
+
+readTraceFromDisk(absPath)
+    .then(trace => trace2video(trace, parse(absPath).name))
+    .then(console.log)
+    .catch(console.error);
+
+async function readTraceFromDisk(path) {
+    let rawTrace;
+
+    try {
+        rawTrace = await readFile(absPath, 'utf8');
+    } catch (err) {
+        throw new Error(`Failed reading trace file from "${path}"`);
+    }
+
+    try {
+        return JSON.parse(rawTrace);
+    } catch (err) {
+        throw new Error(
+            `Provided trace file was not valid JSON. Path: ${path}`,
+        );
+    }
+}

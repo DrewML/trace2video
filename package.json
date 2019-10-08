@@ -1,0 +1,22 @@
+{
+  "name": "trace2video",
+  "version": "0.1.0",
+  "description": "Extract a video from frames in a Chrome DevTools trace file",
+  "main": "src/index.js",
+  "bin": {
+    "trace2video": "bin/trace2video"
+  },
+  "keywords": [
+    "chrome",
+    "chromium",
+    "devtools",
+    "filmstrip",
+    "trace"
+  ],
+  "author": "Andrew Levine",
+  "license": "MIT",
+  "dependencies": {
+    "execa": "^2.0.5",
+    "tempy": "^0.3.0"
+  }
+}
